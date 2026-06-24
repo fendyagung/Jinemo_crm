@@ -132,8 +132,25 @@ class AdminController extends Controller {
         return view('admin.pesanan', compact('orders'));
     }
     public function updateStatusPesanan(Request $request, $id) {
-        $order = Order::findOrFail($id);
-        $order->status = $request->status;
+        $order = Order::with('user')->findOrFail($id);
+        $old_status = $order->status;
+        $new_status = $request->status;
+
+        if ($old_status != 'Selesai' && $new_status == 'Selesai') {
+            // Tambah 10 poin jika status berubah menjadi Selesai
+            if ($order->user) {
+                $order->user->point += 10;
+                $order->user->save();
+            }
+        } elseif ($old_status == 'Selesai' && $new_status != 'Selesai') {
+            // Kurangi 10 poin jika status berubah dari Selesai ke status lain
+            if ($order->user) {
+                $order->user->point = max(0, $order->user->point - 10);
+                $order->user->save();
+            }
+        }
+
+        $order->status = $new_status;
         $order->save();
         return redirect('/admin/pesanan')->with('success', 'Status pesanan #' . str_pad($id, 5, '0', STR_PAD_LEFT) . ' berhasil diperbarui.');
     }

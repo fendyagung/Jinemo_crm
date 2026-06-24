@@ -152,13 +152,8 @@ class CustomerController extends Controller {
             'status'      => 'Pending'
         ]);
 
-        // Tambah poin
-        $user = Auth::user();
-        $user->point += 10;
-        $user->save();
-
         session()->forget('cart');
 
-        return redirect('/profil')->with('success', 'Pesanan berhasil dibuat! +10 poin ditambahkan ke akun Anda.');
+        return redirect('/profil')->with('success', 'Pesanan berhasil dibuat! Poin akan bertambah setelah pesanan diselesaikan admin.');
     }
 }
