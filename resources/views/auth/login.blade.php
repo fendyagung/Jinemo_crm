@@ -90,18 +90,6 @@
     margin-bottom: 20px;
     font-size: 0.88rem;
 }
-.demo-box {
-    background: rgba(240,165,0,0.06);
-    border: 1px solid rgba(240,165,0,0.15);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 20px;
-    font-size: 0.82rem;
-}
-.demo-box p { color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
-.demo-row { display:flex; justify-content:space-between; margin-top:4px; }
-.demo-row span:first-child { color: var(--text-muted); }
-.demo-row span:last-child  { font-family: monospace; color: var(--primary); font-weight: 600; }
 </style>
 
 <div class="auth-wrap">
@@ -119,13 +107,6 @@
                 ✕ {{ $errors->first() }}
             </div>
             @endif
-
-            {{-- Demo Akun --}}
-            <div class="demo-box">
-                <p>🔑 Akun Demo:</p>
-                <div class="demo-row"><span>Admin:</span><span>admin@jinemo.com / password123</span></div>
-                <div class="demo-row"><span>Customer:</span><span>budi@example.com / password123</span></div>
-            </div>
 
             <form method="POST" action="/login">
                 @csrf
