@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:customer')->group(function () {
         Route::get('/profil', [CustomerController::class, 'profil']);
+        Route::put('/profil/update', [CustomerController::class, 'updateProfil'])->name('profil.update');
         Route::get('/riwayat', [CustomerController::class, 'riwayat']);
         Route::get('/testimoni', [CustomerController::class, 'testimoni']);
         Route::post('/testimoni', [CustomerController::class, 'storeTestimoni']);

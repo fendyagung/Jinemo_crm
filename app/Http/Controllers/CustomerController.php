@@ -20,6 +20,22 @@ class CustomerController extends Controller {
         return view('customer.profil', compact('favorites', 'orders'));
     }
 
+    public function updateProfil(Request $request) {
+        $request->validate([
+            'name'                  => 'required|string|max:255',
+            'password'              => 'nullable|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+        $user->name = $request->name;
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        $user->save();
+
+        return redirect('/profil')->with('success', 'Profil berhasil diperbarui!');
+    }
+
     public function riwayat() {
         $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('customer.riwayat', compact('orders'));
