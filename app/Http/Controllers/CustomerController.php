@@ -48,8 +48,7 @@ class CustomerController extends Controller {
     }
 
     public function riwayat() {
-        $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
-        return view('customer.riwayat', compact('orders'));
+        return redirect('/profil');
     }
 
     public function testimoni() {
@@ -160,6 +159,6 @@ class CustomerController extends Controller {
 
         session()->forget('cart');
 
-        return redirect('/riwayat')->with('success', 'Pesanan berhasil dibuat! +10 poin ditambahkan ke akun Anda.');
+        return redirect('/profil')->with('success', 'Pesanan berhasil dibuat! +10 poin ditambahkan ke akun Anda.');
     }
 }
