@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/produk', [HomeController::class, 'produk']);
 Route::get('/produk/{id}', [HomeController::class, 'detail']);
+Route::get('/tentang', function() { return view('tentang'); });
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

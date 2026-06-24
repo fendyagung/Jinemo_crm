@@ -12,11 +12,11 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/produk">Menu</a>
+                <a href="/tentang">Tentang Kami</a>
                 @auth
                     @if(auth()->user()->role === 'admin')
                         <a href="/admin/dashboard" class="btn btn-primary">Admin Panel</a>
                     @else
-                        <a href="/riwayat">Riwayat</a>
                         <a href="/testimoni">Testimoni</a>
                         <a href="/pengaduan">Pengaduan</a>
                         <a href="/keranjang" style="position:relative; color: var(--text-light);">
