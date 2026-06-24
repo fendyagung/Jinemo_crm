@@ -27,7 +27,7 @@ class CustomerController extends Controller {
             'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $user = Auth::user();
+        $user = \App\Models\User::find(Auth::id());
         $user->name = $request->name;
 
         if ($request->hasFile('foto')) {

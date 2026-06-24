@@ -39,7 +39,7 @@ class AdminController extends Controller {
             'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $user = auth()->user();
+        $user = \App\Models\User::find(auth()->id());
         $user->name = $request->name;
 
         if ($request->hasFile('foto')) {

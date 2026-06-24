@@ -154,6 +154,11 @@
         <div class="panel-card">
             <div class="panel-hdr">✏️ Edit Profil Admin</div>
             <div class="panel-body">
+                @if($errors->any())
+                    <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444; padding:12px 18px; border-radius:12px; margin-bottom:20px; font-size:0.9rem;">
+                        ✕ {{ $errors->first() }}
+                    </div>
+                @endif
                 <form method="POST" action="/admin/profil/update" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
