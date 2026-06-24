@@ -50,6 +50,21 @@
     .stat-grid { grid-template-columns:repeat(2,1fr); }
     .section-grid { grid-template-columns:1fr; }
 }
+
+/* Print CSS for Saving to PDF */
+@media print {
+    body { background: #fff !important; color: #000 !important; }
+    .sidebar, .admin-topbar, .btn-print { display: none !important; }
+    .admin-layout { display: block !important; }
+    .admin-content { padding: 0 !important; margin: 0 !important; }
+    .page-header { margin-top: 0 !important; padding-top: 0 !important; }
+    .stat-card, .panel-card { border: 1px solid #ccc !important; box-shadow: none !important; background: #fff !important; break-inside: avoid; color: #000 !important; }
+    .stat-card::before { display: none !important; }
+    .stat-num, .stat-label, .panel-hdr, .stat-row span, .bulan-table th, .bulan-table td { color: #000 !important; }
+    .status-bar-wrap { background: #eee !important; }
+    .bulan-table td span { color: #000 !important; background: transparent !important; border: 1px solid #ccc; }
+    * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+}
 </style>
 
 <div class="page-header">
@@ -57,9 +72,14 @@
         <h1 class="page-title">📊 Laporan Bisnis</h1>
         <p class="page-sub">Ringkasan performa dan data bisnis Jinemo — {{ date('Y') }}</p>
     </div>
-    <div style="color:var(--text-muted); font-size:0.85rem; text-align:right;">
-        <div style="font-weight:600; color:var(--text-light);">{{ now()->format('d F Y') }}</div>
-        <div>{{ now()->format('H:i') }} WIT</div>
+    <div style="display:flex; gap:16px; align-items:center;">
+        <button onclick="window.print()" class="btn-print" style="background:var(--primary); color:#1a1a1a; padding:10px 20px; border:none; border-radius:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; transition:0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            🖨️ Cetak / Simpan PDF
+        </button>
+        <div style="color:var(--text-muted); font-size:0.85rem; text-align:right;" class="d-print-none">
+            <div style="font-weight:600; color:var(--text-light);">{{ now()->format('d F Y') }}</div>
+            <div>{{ now()->format('H:i') }} WIT</div>
+        </div>
     </div>
 </div>
 
