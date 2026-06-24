@@ -6,7 +6,7 @@
 /* Kartu kiri */
 .profil-card { background:var(--card-bg); border-radius:20px; border:1px solid rgba(255,255,255,0.07); overflow:hidden; position:sticky; top:90px; }
 .profil-banner { height:80px; background:linear-gradient(135deg,#f0a500,#cf8d00); }
-.avatar-wrap { padding:0 24px; margin-top:-40px; margin-bottom:14px; }
+.avatar-wrap { padding:0 24px; margin-top:-40px; margin-bottom:14px; position:relative; z-index:10; }
 .avatar-img {
     width:80px; height:80px; border-radius:50%;
     border:4px solid var(--card-bg);

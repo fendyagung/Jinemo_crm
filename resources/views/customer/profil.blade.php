@@ -28,6 +28,8 @@
     padding: 0 24px;
     margin-top: -44px;
     margin-bottom: 16px;
+    position: relative;
+    z-index: 10;
 }
 .profil-avatar {
     width: 88px; height: 88px;
