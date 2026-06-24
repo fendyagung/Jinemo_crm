@@ -88,19 +88,48 @@ class AdminController extends Controller {
     }
 
     public function pelanggan() {
-        $customers = User::where('role', 'customer')->get();
+        $customers = User::where('role', 'customer')->latest()->get();
         return view('admin.pelanggan', compact('customers'));
     }
     public function pesanan() {
-        $orders = Order::with('user')->get();
+        $orders = Order::with('user')->latest()->get();
         return view('admin.pesanan', compact('orders'));
+    }
+    public function updateStatusPesanan(Request $request, $id) {
+        $order = Order::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+        return redirect('/admin/pesanan')->with('success', 'Status pesanan #' . str_pad($id, 5, '0', STR_PAD_LEFT) . ' berhasil diperbarui.');
+    }
+    public function laporan() {
+        $total_pendapatan   = Order::where('status', 'Selesai')->sum('total_harga');
+        $total_pesanan      = Order::count();
+        $pesanan_selesai    = Order::where('status', 'Selesai')->count();
+        $pesanan_pending    = Order::where('status', 'Pending')->count();
+        $pesanan_diproses   = Order::where('status', 'Diproses')->count();
+        $total_pelanggan    = User::where('role', 'customer')->count();
+        $total_produk       = Product::count();
+        $total_testimoni    = Testimonial::count();
+        $total_pengaduan    = Complaint::count();
+        $rata_rating        = Testimonial::avg('rating');
+        // Pesanan per bulan (6 bulan terakhir)
+        $pesanan_bulanan = Order::selectRaw('MONTH(created_at) as bulan, COUNT(*) as total, SUM(total_harga) as pendapatan')
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('bulan')
+            ->orderBy('bulan')
+            ->get();
+        return view('admin.laporan', compact(
+            'total_pendapatan', 'total_pesanan', 'pesanan_selesai', 'pesanan_pending',
+            'pesanan_diproses', 'total_pelanggan', 'total_produk', 'total_testimoni',
+            'total_pengaduan', 'rata_rating', 'pesanan_bulanan'
+        ));
     }
     public function testimoni() {
         $testimonials = Testimonial::with('user')->latest()->get();
         return view('admin.testimoni', compact('testimonials'));
     }
     public function pengaduan() {
-        $complaints = Complaint::with('user')->get();
+        $complaints = Complaint::with('user')->latest()->get();
         return view('admin.pengaduan', compact('complaints'));
     }
 }

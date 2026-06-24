@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('admin.produk.destroy');
         Route::get('/pelanggan', [AdminController::class, 'pelanggan']);
         Route::get('/pesanan', [AdminController::class, 'pesanan']);
+        Route::post('/pesanan/{id}/status', [AdminController::class, 'updateStatusPesanan'])->name('admin.pesanan.status');
+        Route::get('/laporan', [AdminController::class, 'laporan']);
         Route::get('/testimoni', [AdminController::class, 'testimoni']);
         Route::get('/pengaduan', [AdminController::class, 'pengaduan']);
     });
