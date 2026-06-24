@@ -22,15 +22,26 @@ class CustomerController extends Controller {
 
     public function updateProfil(Request $request) {
         $request->validate([
-            'name'                  => 'required|string|max:255',
-            'password'              => 'nullable|min:8|confirmed',
+            'name'     => 'required|string|max:255',
+            'password' => 'nullable|min:8|confirmed',
+            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $user = Auth::user();
         $user->name = $request->name;
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($user->foto) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto);
+            }
+            $user->foto = $request->file('foto')->store('foto_profil', 'public');
+        }
+
         if ($request->filled('password')) {
             $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
         }
+
         $user->save();
 
         return redirect('/profil')->with('success', 'Profil berhasil diperbarui!');

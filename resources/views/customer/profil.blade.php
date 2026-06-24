@@ -160,7 +160,14 @@
     <div class="profil-card">
         <div class="profil-banner"></div>
         <div class="profil-avatar-wrap">
-            <div class="profil-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+            @if(auth()->user()->foto)
+                <div class="profil-avatar" style="padding:0; overflow:hidden;">
+                    <img src="{{ Storage::url(auth()->user()->foto) }}" alt="Foto Profil"
+                         style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                </div>
+            @else
+                <div class="profil-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+            @endif
         </div>
         <div class="profil-name">{{ auth()->user()->name }}</div>
         <div class="profil-email">{{ auth()->user()->email }}</div>
@@ -339,9 +346,33 @@
                     <span class="panel-hdr-title">✏️ Data Akun</span>
                 </div>
                 <div style="padding: 28px;">
-                    <form method="POST" action="/profil/update">
+                    <form method="POST" action="/profil/update" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+
+                        {{-- Upload Foto --}}
+                        <div style="margin-bottom:24px;">
+                            <label class="form-label">Foto Profil</label>
+                            <div style="display:flex; align-items:center; gap:20px;">
+                                <div id="foto-preview" style="width:80px; height:80px; border-radius:50%; overflow:hidden; background:rgba(255,255,255,0.05); border:2px dashed rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    @if(auth()->user()->foto)
+                                        <img src="{{ Storage::url(auth()->user()->foto) }}" id="preview-img" style="width:100%; height:100%; object-fit:cover;">
+                                    @else
+                                        <span id="preview-placeholder" style="font-size:28px; color:var(--text-muted);">👤</span>
+                                        <img id="preview-img" src="" style="display:none; width:100%; height:100%; object-fit:cover;">
+                                    @endif
+                                </div>
+                                <div style="flex:1;">
+                                    <label for="foto-input" style="display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.04); cursor:pointer; font-size:0.88rem; color:var(--text-light); transition:0.2s;"
+                                        onmouseover="this.style.borderColor='var(--primary)'; this.style.color='var(--primary)'"
+                                        onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.color='var(--text-light)'">
+                                        📷 Pilih Foto
+                                    </label>
+                                    <input type="file" id="foto-input" name="foto" accept="image/*" style="display:none;" onchange="previewFoto(this)">
+                                    <p style="color:var(--text-muted); font-size:0.78rem; margin-top:8px;">JPG, PNG. Maks 2MB.</p>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-grid" style="margin-bottom: 20px;">
                             <div>
@@ -422,6 +453,20 @@ function switchTab(name, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
+}
+
+function previewFoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('preview-img');
+            const placeholder = document.getElementById('preview-placeholder');
+            img.src = e.target.result;
+            img.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 </script>
 @endsection
