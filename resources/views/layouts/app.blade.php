@@ -26,7 +26,7 @@
                                 <span style="position:absolute; top:-8px; right:-8px; background:var(--primary); color:#1a1a1a; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center;">{{ $cartCount }}</span>
                             @endif
                         </a>
-                        <a href="/profil" class="btn btn-primary" style="background:transparent; border: 1px solid var(--primary); color: var(--primary);">Poin: {{ auth()->user()->point }}</a>
+                        <a href="/profil" style="display:flex; align-items:center; gap:5px;">👤 Profil</a>
                     @endif
                     <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                         @csrf
