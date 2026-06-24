@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard']);
+        Route::get('/profil', [AdminController::class, 'profil']);
+        Route::put('/profil/update', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
         Route::get('/produk', [AdminController::class, 'produk']);
         Route::post('/produk', [AdminController::class, 'storeProduk'])->name('admin.produk.store');
         Route::put('/produk/{id}', [AdminController::class, 'updateProduk'])->name('admin.produk.update');

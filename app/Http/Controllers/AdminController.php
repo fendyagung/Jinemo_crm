@@ -21,6 +21,42 @@ class AdminController extends Controller {
             'recent_orders', 'recent_customers'
         ));
     }
+
+    public function profil() {
+        $stats = [
+            'pelanggan' => User::where('role', 'customer')->count(),
+            'produk'    => Product::count(),
+            'pesanan'   => Order::count(),
+            'pengaduan' => Complaint::count(),
+        ];
+        return view('admin.profil', compact('stats'));
+    }
+
+    public function updateProfil(Request $request) {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'password' => 'nullable|min:8|confirmed',
+            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = auth()->user();
+        $user->name = $request->name;
+
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+            $user->foto = $request->file('foto')->store('foto_profil', 'public');
+        }
+
+        if ($request->filled('password')) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->save();
+        return redirect('/admin/profil')->with('success', 'Profil admin berhasil diperbarui!');
+    }
+
     public function produk() {
         $products = Product::all();
         return view('admin.produk', compact('products'));
