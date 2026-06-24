@@ -19,10 +19,22 @@
             <a href="/admin/dashboard"  class="{{ request()->is('admin/dashboard')  ? 'active' : '' }}">📊 Dashboard</a>
             <a href="/admin/produk"     class="{{ request()->is('admin/produk')     ? 'active' : '' }}">🍽️ Kelola Produk</a>
             <a href="/admin/pelanggan"  class="{{ request()->is('admin/pelanggan')  ? 'active' : '' }}">👥 Kelola Pelanggan</a>
-            <a href="/admin/pesanan"    class="{{ request()->is('admin/pesanan')    ? 'active' : '' }}">📦 Kelola Pesanan</a>
+            <a href="/admin/pesanan" class="{{ request()->is('admin/pesanan') ? 'active' : '' }}" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>📦 Kelola Pesanan</span>
+                @php $pendingOrders = \App\Models\Order::where('status', 'Pending')->count(); @endphp
+                @if($pendingOrders > 0)
+                    <span style="background:#ef4444; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:50px;">{{ $pendingOrders }}</span>
+                @endif
+            </a>
             <a href="/admin/laporan"    class="{{ request()->is('admin/laporan')    ? 'active' : '' }}">📈 Laporan</a>
             <a href="/admin/testimoni"  class="{{ request()->is('admin/testimoni')  ? 'active' : '' }}">⭐ Testimoni</a>
-            <a href="/admin/pengaduan"  class="{{ request()->is('admin/pengaduan')  ? 'active' : '' }}">📢 Pengaduan</a>
+            <a href="/admin/pengaduan" class="{{ request()->is('admin/pengaduan') ? 'active' : '' }}" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>📢 Pengaduan</span>
+                @php $pendingComplaints = \App\Models\Complaint::where('status', 'Pending')->count(); @endphp
+                @if($pendingComplaints > 0)
+                    <span style="background:#ef4444; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:50px;">{{ $pendingComplaints }}</span>
+                @endif
+            </a>
             <a href="/admin/profil"     class="{{ request()->is('admin/profil')     ? 'active' : '' }}">👤 Profil Saya</a>
             <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
             <form action="{{ route('logout') }}" method="POST">
