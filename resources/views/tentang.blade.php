@@ -54,7 +54,7 @@
     </div>
     <div class="about-text">
         <h2>Sejarah Kami</h2>
-        <p>Berdiri sejak tahun 2026, <strong>Jinemo</strong> lahir dari kecintaan kami terhadap kekayaan rempah dan budaya kuliner Nusantara, khususnya dari wilayah Indonesia Timur. Kami menyadari bahwa menemukan hidangan otentik dengan resep leluhur di tengah kota bukanlah hal yang mudah.</p>
+        <p>Berdiri sejak tahun 2017, <strong>Jinemo</strong> lahir dari kecintaan kami terhadap kekayaan rempah dan budaya kuliner Nusantara, khususnya dari wilayah Indonesia Timur. Kami menyadari bahwa menemukan hidangan otentik dengan resep leluhur di tengah kota bukanlah hal yang mudah.</p>
         <p>Oleh karena itu, Jinemo hadir sebagai solusi jembatan kuliner yang menghubungkan para penikmat makanan dengan cita rasa asli kampung halaman. Setiap hidangan yang kami sajikan dimasak menggunakan bahan-bahan segar berkualitas yang dipilih langsung oleh koki ahli kami.</p>
         <p>Dengan sistem <em>E-CRM (Customer Relationship Management)</em>, kami tidak hanya menyajikan makanan, tetapi juga berdedikasi untuk memberikan layanan dan pengalaman pelanggan yang tak terlupakan melalui sistem poin loyalitas dan kemudahan pemesanan.</p>
     </div>
