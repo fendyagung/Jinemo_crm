@@ -9,62 +9,130 @@ use App\Models\Complaint;
 use App\Models\Product;
 
 class CustomerController extends Controller {
+
     public function profil() {
         $favorites = DB::table('favorites')
             ->join('products', 'favorites.product_id', '=', 'products.id')
             ->where('favorites.user_id', Auth::id())
             ->select('favorites.*', 'products.nama_produk')
             ->get();
-        return view('customer.profil', compact('favorites'));
+        $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        return view('customer.profil', compact('favorites', 'orders'));
     }
+
     public function riwayat() {
         $orders = Order::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('customer.riwayat', compact('orders'));
     }
+
     public function testimoni() {
-        return view('customer.testimoni');
+        $testimonials = Testimonial::with('user')->latest()->get();
+        return view('customer.testimoni', compact('testimonials'));
     }
+
     public function storeTestimoni(Request $request) {
         Testimonial::create([
             'user_id' => Auth::id(),
-            'rating' => $request->rating,
-            'komentar' => $request->komentar
+            'rating'  => $request->rating,
+            'komentar'=> $request->komentar
         ]);
         return back()->with('success', 'Testimoni berhasil dikirim. Terima kasih!');
     }
+
     public function pengaduan() {
         return view('customer.pengaduan');
     }
+
     public function storePengaduan(Request $request) {
         Complaint::create([
-            'user_id' => Auth::id(),
-            'subjek' => $request->subjek,
-            'isi_keluhan' => $request->isi_keluhan,
-            'status' => 'Baru'
+            'user_id'    => Auth::id(),
+            'subjek'     => $request->subjek,
+            'isi_keluhan'=> $request->isi_keluhan,
+            'status'     => 'Baru'
         ]);
         return back()->with('success', 'Pengaduan berhasil dikirim. Kami akan segera merespon.');
     }
-    public function pesan($id) {
-        // Dummy order process
-        $product = Product::findOrFail($id);
-        Order::create([
-            'user_id' => Auth::id(),
-            'total_harga' => $product->harga,
-            'status' => 'Pending'
-        ]);
-        // Add loyalty point
-        $user = Auth::user();
-        $user->point += 10;
-        $user->save();
-        return redirect('/riwayat');
-    }
+
     public function favorit($id) {
         DB::table('favorites')->insertOrIgnore([
-            'user_id' => Auth::id(),
+            'user_id'    => Auth::id(),
             'product_id' => $id,
             'created_at' => now(),
             'updated_at' => now()
         ]);
-        return redirect('/profil');
+        return redirect('/profil')->with('success', 'Produk ditambahkan ke favorit!');
+    }
+
+    // =====================
+    // KERANJANG (Cart)
+    // =====================
+
+    public function keranjang() {
+        $cart  = session()->get('cart', []);
+        $total = collect($cart)->sum(fn($i) => $i['harga'] * $i['qty']);
+        return view('keranjang', compact('cart', 'total'));
+    }
+
+    public function tambahKeranjang(Request $request, $id) {
+        $product = Product::findOrFail($id);
+        $qty     = max(1, (int) $request->input('qty', 1));
+        $cart    = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            $cart[$id]['qty'] += $qty;
+        } else {
+            $cart[$id] = [
+                'nama_produk' => $product->nama_produk,
+                'harga'       => $product->harga,
+                'gambar'      => $product->gambar,
+                'qty'         => $qty,
+            ];
+        }
+
+        session()->put('cart', $cart);
+        return redirect()->route('keranjang')->with('success', $product->nama_produk . ' ditambahkan ke keranjang!');
+    }
+
+    public function updateKeranjang(Request $request, $id) {
+        $cart = session()->get('cart', []);
+        $qty  = max(1, (int) $request->input('qty', 1));
+
+        if (isset($cart[$id])) {
+            $cart[$id]['qty'] = $qty;
+            session()->put('cart', $cart);
+        }
+
+        return redirect()->route('keranjang');
+    }
+
+    public function hapusKeranjang($id) {
+        $cart = session()->get('cart', []);
+        unset($cart[$id]);
+        session()->put('cart', $cart);
+        return redirect()->route('keranjang')->with('success', 'Item dihapus dari keranjang.');
+    }
+
+    public function checkout(Request $request) {
+        $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('keranjang')->with('error', 'Keranjang kosong!');
+        }
+
+        $total = collect($cart)->sum(fn($i) => $i['harga'] * $i['qty']);
+
+        Order::create([
+            'user_id'     => Auth::id(),
+            'total_harga' => $total,
+            'status'      => 'Pending'
+        ]);
+
+        // Tambah poin
+        $user = Auth::user();
+        $user->point += 10;
+        $user->save();
+
+        session()->forget('cart');
+
+        return redirect('/riwayat')->with('success', 'Pesanan berhasil dibuat! +10 poin ditambahkan ke akun Anda.');
     }
 }

@@ -10,11 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller {
     public function dashboard() {
-        $total_pelanggan = User::where('role', 'customer')->count();
-        $total_produk = Product::count();
-        $total_pesanan = Order::count();
-        $total_pengaduan = Complaint::count();
-        return view('admin.dashboard', compact('total_pelanggan', 'total_produk', 'total_pesanan', 'total_pengaduan'));
+        $total_pelanggan  = User::where('role', 'customer')->count();
+        $total_produk     = Product::count();
+        $total_pesanan    = Order::count();
+        $total_pengaduan  = Complaint::count();
+        $recent_orders    = Order::with('user')->latest()->limit(5)->get();
+        $recent_customers = User::where('role', 'customer')->latest()->limit(5)->get();
+        return view('admin.dashboard', compact(
+            'total_pelanggan', 'total_produk', 'total_pesanan', 'total_pengaduan',
+            'recent_orders', 'recent_customers'
+        ));
     }
     public function produk() {
         $products = Product::all();
@@ -91,7 +96,7 @@ class AdminController extends Controller {
         return view('admin.pesanan', compact('orders'));
     }
     public function testimoni() {
-        $testimonials = Testimonial::with('user')->get();
+        $testimonials = Testimonial::with('user')->latest()->get();
         return view('admin.testimoni', compact('testimonials'));
     }
     public function pengaduan() {

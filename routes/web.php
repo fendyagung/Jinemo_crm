@@ -28,8 +28,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/testimoni', [CustomerController::class, 'storeTestimoni']);
         Route::get('/pengaduan', [CustomerController::class, 'pengaduan']);
         Route::post('/pengaduan', [CustomerController::class, 'storePengaduan']);
-        Route::post('/pesan/{id}', [CustomerController::class, 'pesan']);
         Route::post('/favorit/{id}', [CustomerController::class, 'favorit']);
+
+        // Keranjang (Cart)
+        Route::get('/keranjang', [CustomerController::class, 'keranjang'])->name('keranjang');
+        Route::post('/keranjang/tambah/{id}', [CustomerController::class, 'tambahKeranjang'])->name('keranjang.tambah');
+        Route::post('/keranjang/update/{id}', [CustomerController::class, 'updateKeranjang'])->name('keranjang.update');
+        Route::post('/keranjang/hapus/{id}', [CustomerController::class, 'hapusKeranjang'])->name('keranjang.hapus');
+        Route::post('/keranjang/checkout', [CustomerController::class, 'checkout'])->name('keranjang.checkout');
     });
 
     Route::middleware('role:admin')->prefix('admin')->group(function () {
